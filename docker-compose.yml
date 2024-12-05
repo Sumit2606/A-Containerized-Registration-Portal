@@ -6,30 +6,33 @@ services:
     volumes:
       - ./php:/var/www/html
     networks:
-      - app-network
+      - frontend
+      - backend
 
   nginx:
     image: nginx:latest
     container_name: nginx
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx:/usr/share/nginx/html
     networks:
-      - app-network
+      - frontend
 
   mysql:
     image: mysql:5.7
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: sumit2606
     volumes:
       - ./mysql/data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - app-network
+      - backend
 
 networks:
-  app-network:
+  frontend:
+    driver: bridge
+  backend:
     driver: bridge
